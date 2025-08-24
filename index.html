@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+
+
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Navigation -->
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <h1 class="text-2xl font-bold text-indigo-600">Hammad's Academy</h1>
+
+                <!-- Mobile Menu Button -->
+                <button id="menu-btn" class="md:hidden block text-gray-600 focus:outline-none">
+                    ☰
+                </button>
+
+                <!-- Desktop Menu -->
+                <div id="menu" class="hidden md:flex space-x-4">
+                    <button onclick="showStudentPage()"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        Student Quiz
+                    </button>
+                    <button onclick="showTeacherPage()"
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        Teacher Panel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div id="mobileMenu" class="hidden px-4 pb-4 md:hidden">
+            <button onclick="handleMenuClick(showStudentPage)"
+                class="block w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 my-1 rounded-lg transition-colors">
+                Student Quiz
+            </button>
+            <button onclick="handleMenuClick(showTeacherPage)"
+                class="block w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 my-1 rounded-lg transition-colors">
+                Teacher Panel
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobileMenu");
+
+        // Toggle Mobile Menu
+        menuBtn.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+
+        // Function: Call target function + close menu
+        function handleMenuClick(callback) {
+            callback(); // Call the original function (showStudentPage or showTeacherPage)
+            mobileMenu.classList.add("hidden"); // Close menu
+        }
+    </script>
+
+
+    <!-- Student Page -->
+    <div id="studentPage" class="container mx-auto px-4 py-8">
+        <!-- Student Form -->
+        <div id="studentForm" class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Start Your Quiz</h2>
+            <form onsubmit="startQuiz(event)" class="space-y-4">
+                <div> <label class="block text-sm font-medium text-gray-700 mb-2">Name</label> <input type="text"
+                        id="studentName" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div> <label class="block text-sm font-medium text-gray-700 mb-2">Roll Number</label> <input type="text"
+                        id="rollNumber" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div> <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label> <select id="subject"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select Subject</option>
+                        <option value="computer">Computer</option>
+                        <option value="mathematics">Mathematics</option>
+                        <option value="physics">Physics</option>
+                    </select> </div>
+                <div> <label class="block text-sm font-medium text-gray-700 mb-2">Number of Questions</label> <select
+                        id="numQuestions" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select Questions</option>
+                        <option value="5">5 Questions</option>
+                        <option value="10">10 Questions</option>
+                        <option value="15">15 Questions</option>
+                    </select> </div> <button type="submit"
+                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">Start
+                    Quiz</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div id="quizSection" class="hidden max-w-2xl mx-auto">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-800">Question <span id="currentQuestion">1</span> of <span
+                        id="totalQuestions">10</span></h3>
+                <div class="text-sm text-gray-600">Score: <span id="currentScore">0</span></div>
+            </div>
+            <div id="questionCard">
+                <h4 id="questionText" class="text-lg font-medium mb-4 text-gray-800"></h4>
+                <div id="optionsContainer" class="space-y-3 mb-6"></div>
+
+                <!-- <button id="nextButton" onclick="nextQuestion()"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors disabled:bg-gray-300"
+                        disabled>Next Question</button> -->
+
+                <!-- Buttons -->
+                <div class="flex gap-3">
+                    <button id="submitButton" onclick="submitAnswer()"
+                        class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors disabled:bg-gray-300"
+                        disabled>
+                        Submit
+                    </button>
+
+                    <button id="nextButton" onclick="nextQuestion()"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors disabled:bg-gray-300"
+                        disabled>
+                        Next Question
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+    <!-- Result Section -->
+    <div id="resultSection" class="hidden max-w-md mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Quiz Complete!</h2>
+        <div class="space-y-3 text-center">
+            <p><strong>Name:</strong> <span id="resultName"></span></p>
+            <p><strong>Roll Number:</strong> <span id="resultRoll"></span></p>
+            <p><strong>Subject:</strong> <span id="resultSubject"></span></p>
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <p class="text-2xl font-bold text-blue-600">Score: <span id="finalScore"></span></p>
+            </div> <button onclick="resetQuiz()"
+                class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors">Take
+                Another Quiz</button>
+        </div>
+    </div>
+
+    <!-- Teacher Page -->
+    <div id="teacherPage" class="hidden container mx-auto px-4 py-8"> <!-- Login Form -->
+        <div id="loginForm" class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Teacher Login</h2>
+            <form onsubmit="teacherLogin(event)" class="space-y-4">
+                <div> <label class="block text-sm font-medium text-gray-700 mb-2">Email</label> <input type="email"
+                        id="teacherEmail" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div> <label class="block text-sm font-medium text-gray-700 mb-2">Password</label> <input
+                        type="password" id="teacherPassword" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div> <button type="submit"
+                    class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">Login</button>
+            </form>
+            <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p class="text-sm text-yellow-800"><strong class="text-lg">Note:</strong> Please use the email ID
+                    provided by the admin.
+                    If you forget your password, kindly contact the admin at: <strong> <a
+                            href="mailto: hammadmuzaffar360@gmail.com">hammadmuzaffar360@gmail.com</a></strong>
+                </p>
+            </div>
+        </div> <!-- Admin Panel -->
+        <div id="adminPanel" class="hidden max-w-2xl mx-auto">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Add Quiz Question</h2> <button
+                        onclick="teacherLogout()"
+                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">Logout</button>
+                </div>
+                <form onsubmit="addQuestion(event)" class="space-y-4">
+                    <div> <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label> <select
+                            id="questionSubject" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Select Subject</option>
+                            <option value="computer">Computer</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="physics">Physics</option>
+                        </select> </div>
+                    <div> <label class="block text-sm font-medium text-gray-700 mb-2">Question</label> <textarea
+                            id="questionInput" required rows="3"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div> <label class="block text-sm font-medium text-gray-700 mb-2">Option A</label> <input
+                                type="text" id="optionA" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div> <label class="block text-sm font-medium text-gray-700 mb-2">Option B</label> <input
+                                type="text" id="optionB" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div> <label class="block text-sm font-medium text-gray-700 mb-2">Option C</label> <input
+                                type="text" id="optionC" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div> <label class="block text-sm font-medium text-gray-700 mb-2">Option D</label> <input
+                                type="text" id="optionD" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    <div> <label class="block text-sm font-medium text-gray-700 mb-2">Correct Answer</label> <select
+                            id="correctAnswer" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Select Correct Answer</option>
+                            <option value="A">Option A</option>
+                            <option value="B">Option B</option>
+                            <option value="C">Option C</option>
+                            <option value="D">Option D</option>
+                        </select> </div> <button type="submit"
+                        class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">Add
+                        Question</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="app.js"> </script>
+</body>
+
+</html>
